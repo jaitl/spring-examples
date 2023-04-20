@@ -43,7 +43,7 @@ class InputControllerTest extends BaseApiTest {
     }
 
     @Test
-    public void testInput_Invalid_Attachment() throws Exception {
+    public void testInput_Invalid_NullAttachment() throws Exception {
         CreateInputRequest request = new CreateInputRequest();
         request.setInputId(1);
         request.setName("newInputValidTest");
@@ -53,5 +53,21 @@ class InputControllerTest extends BaseApiTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", equalTo(400)))
                 .andExpect(jsonPath("$.error", equalTo("attachment: must not be null")));
+    }
+
+    @Test
+    public void testInput_Invalid_Attachment() throws Exception {
+        AttachmentDto attachmentDto = new AttachmentDto();
+        attachmentDto.setContent(null);
+
+        CreateInputRequest request = new CreateInputRequest();
+        request.setInputId(1);
+        request.setName("newInputValidTest");
+        request.setAttachment(attachmentDto);
+
+        mockMvc.perform(doPost("/v1/inputs", request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", equalTo(400)))
+                .andExpect(jsonPath("$.error", equalTo("attachment.content: must not be null")));
     }
 }
