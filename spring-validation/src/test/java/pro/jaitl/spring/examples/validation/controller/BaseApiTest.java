@@ -28,4 +28,10 @@ public class BaseApiTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(write(request));
     }
+
+    public MockHttpServletRequestBuilder doPut(String url, Object request) {
+        return MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(write(request));
+    }
 }
