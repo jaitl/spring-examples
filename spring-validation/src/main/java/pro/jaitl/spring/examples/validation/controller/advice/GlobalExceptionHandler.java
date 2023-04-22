@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pro.jaitl.spring.examples.validation.controller.responce.ErrorResponse;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-        String error = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> String.format("%s: %s", e.getField(), e.getDefaultMessage()))
+        Stream<String> fieldErrors = ex.getFieldErrors().stream()
+                .map(e -> String.format("%s: %s", e.getField(), e.getDefaultMessage()));
+
+        Stream<String> globalErrors = ex.getGlobalErrors().stream()
+                .map(e -> String.format("%s: %s", e.getObjectName(), e.getDefaultMessage()));
+
+        String error = Stream.concat(fieldErrors, globalErrors)
                 .collect(Collectors.joining(", "));
 
         ErrorResponse response = new ErrorResponse();
