@@ -23,12 +23,12 @@ class OutputControllerTest extends BaseApiTest {
     public void testOutput_Create_Invalid() throws Exception {
         OutputDto outputDto = new OutputDto();
         outputDto.setName(null);
-        outputDto.setOutputId(-1);
+        outputDto.setOutputId(null);
 
         mockMvc.perform(doPost("/v1/outputs", outputDto))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", equalTo(400)))
-                .andExpect(jsonPath("$.error", containsString("outputId: must be greater than or equal to 0")))
+                .andExpect(jsonPath("$.error", containsString("outputId: must not be null")))
                 .andExpect(jsonPath("$.error", containsString("name: must not be null")));
     }
 

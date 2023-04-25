@@ -22,8 +22,6 @@ class InputRepositoryTest {
         entity.setName("test");
 
         assertDoesNotThrow(() -> inputRepository.save(entity));
-
-        System.out.println(inputRepository.findById(entity.getId()));
     }
 
     @Test
